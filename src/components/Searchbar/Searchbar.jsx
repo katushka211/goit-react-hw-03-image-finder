@@ -17,23 +17,24 @@ export class Searchbar extends Component {
       return;
     }
     this.props.onSubmit(this.state.imageName);
-    this.setState(this.state.imageName === '');
+    this.setState(this.setState({ imageName: '' }));
   };
 
   render() {
     return (
-      <header class="searchbar">
-        <form onSubmit={this.handleSubmit} class="form">
-          <button type="submit" class="button">
-            <span class="button-label">Search</span>
+      <header>
+        <form onSubmit={this.handleSubmit}>
+          <button type="submit">
+            <span>Search</span>
           </button>
 
           <input
-            class="input"
             type="text"
-            autocomplete="off"
-            autofocus
+            autoComplete="off"
+            autoFocus
             placeholder="Search images and photos"
+            value={this.state.imageName}
+            onChange={this.handleNameChange}
           />
         </form>
       </header>
