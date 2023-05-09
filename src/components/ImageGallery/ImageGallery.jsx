@@ -1,4 +1,4 @@
-// import { ImageErrorView } from 'components/ImageErrorViews/ImageErrorView';
+import { ImageErrorView } from 'components/ImageErrorViews/ImageErrorView';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Loader } from 'components/Loader/Loader';
 import { Component } from 'react';
@@ -73,6 +73,7 @@ export class ImageGallery extends Component {
             (page < totalPages || images.length % 12 === 0) && (
               <Button onClick={this.loadMoreBtnClick} />
             )}
+          {images.length === 0 && <ImageErrorView />}
         </>
       );
     }
