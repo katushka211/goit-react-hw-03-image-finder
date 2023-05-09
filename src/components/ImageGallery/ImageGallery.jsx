@@ -37,13 +37,16 @@ export class ImageGallery extends Component {
       this.setState({ error: null });
     }
 
-    //   setTimeout(() => {
+    //   setTimeout(() => {page === 1 ? images.hits : [...prevState.images, ...images.hits],
     fetchImages(nextName, page)
       .then(images => {
         this.setState(prevState => ({
-          images: page === 1 ? images.hits : [...prevState.images, ...images],
+          images:
+            page === 1
+              ? images.hits
+              : [...prevState.images.hits, ...images.hits],
           status: Status.RESOLVED,
-          totalPages: Math.ceil(images.totalHits / 12),
+          totalPages: Math.floor(images.totalHits / 12),
         }));
       })
       .catch(error => this.setState({ error, status: Status.REJECTED }));
@@ -51,9 +54,12 @@ export class ImageGallery extends Component {
   }
 
   loadMoreBtnClick = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+    const { page, totalPages } = this.state;
+    if (page < totalPages) {
+      this.setState(prevState => ({
+        page: prevState.page + 1,
+      }));
+    }
   };
 
   render() {
@@ -78,9 +84,7 @@ export class ImageGallery extends Component {
               <ImageGalleryItem key={image.id} image={image} />
             ))}
           </ul>
-          {images.length >= 12 && page <= totalPages && (
-            <Button onClick={this.loadMoreBtnClick} />
-          )}
+          {page <= totalPages && <Button onClick={this.loadMoreBtnClick} />}
         </>
       );
     }
