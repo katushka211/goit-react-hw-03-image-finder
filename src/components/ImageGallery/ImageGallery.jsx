@@ -1,9 +1,10 @@
-import { ImageErrorView } from 'components/ImageErrorViews/ImageErrorView';
+// import { ImageErrorView } from 'components/ImageErrorViews/ImageErrorView';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Loader } from 'components/Loader/Loader';
 import { Component } from 'react';
 import { fetchImages } from 'services/fetchImages';
 import { Button } from 'components/Searchbar/Button/Button';
+import { toast } from 'react-toastify';
 
 const Status = {
   IDLE: 'idle',
@@ -22,7 +23,7 @@ export class ImageGallery extends Component {
     totalPages: 0,
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     const { page } = this.state;
     const prevName = prevProps.image;
     const nextName = this.props.image;
@@ -31,49 +32,33 @@ export class ImageGallery extends Component {
       this.setState({
         status: Status.PENDING,
       });
-    }
 
-    if (this.state.error) {
-      this.setState({ error: null });
-    }
+      const images = await fetchImages(nextName, page);
+      if (nextName.trim() === '' || !images.length) {
+        toast.error(`Sorry, but there are no pictures with ${nextName}`);
+      }
 
-    //   setTimeout(() => {page === 1 ? images.hits : [...prevState.images, ...images.hits],
-    fetchImages(nextName, page)
-      .then(images => {
-        this.setState(prevState => ({
-          images:
-            page === 1
-              ? images.hits
-              : [...prevState.images.hits, ...images.hits],
-          status: Status.RESOLVED,
-          totalPages: Math.floor(images.totalHits / 12),
-        }));
-      })
-      .catch(error => this.setState({ error, status: Status.REJECTED }));
-    //   }, 2000);
+      const totalPages = Math.ceil(images.totalHits / 12);
+      this.setState(prevState => ({
+        images: [...prevState.images, ...images],
+        status: Status.RESOLVED,
+        totalPages: totalPages,
+      }));
+    }
   }
 
   loadMoreBtnClick = () => {
-    const { page, totalPages } = this.state;
-    if (page < totalPages) {
-      this.setState(prevState => ({
-        page: prevState.page + 1,
-      }));
-    }
+    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
   render() {
-    const { status, error, images, page, totalPages } = this.state;
+    const { status, images, totalPages, page } = this.state;
     if (status === Status.IDLE) {
       return <div>Please, enter a search query</div>;
     }
 
     if (status === Status.PENDING) {
       return <Loader />;
-    }
-
-    if (status === Status.REJECTED) {
-      return <ImageErrorView message={error.message} />;
     }
 
     if (status === Status.RESOLVED) {
@@ -84,7 +69,10 @@ export class ImageGallery extends Component {
               <ImageGalleryItem key={image.id} image={image} />
             ))}
           </ul>
-          {page <= totalPages && <Button onClick={this.loadMoreBtnClick} />}
+          {images.length >= 12 &&
+            (page < totalPages || images.length % 12 === 0) && (
+              <Button onClick={this.loadMoreBtnClick} />
+            )}
         </>
       );
     }
