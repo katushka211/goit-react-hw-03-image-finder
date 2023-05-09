@@ -3,6 +3,8 @@ import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Loader } from 'components/Loader/Loader';
 import { Component } from 'react';
 import { fetchImages } from 'services/fetchImages';
+import { Button } from 'components/Searchbar/Button/Button';
+
 const Status = {
   IDLE: 'idle',
   PENDING: 'pending',
@@ -24,29 +26,38 @@ export class ImageGallery extends Component {
     const { page } = this.state;
     const prevName = prevProps.image;
     const nextName = this.props.image;
-    if (prevName !== nextName) {
+
+    if (prevName !== nextName || prevState.page !== page) {
       this.setState({
         status: Status.PENDING,
       });
-
-      if (this.state.error) {
-        this.setState({ error: null });
-      }
-
-      fetchImages(nextName)
-        .then(images => {
-          this.setState(prevState => ({
-            images:
-              page === 1 ? images.hits : [...prevState.images, ...images.hits],
-            status: Status.RESOLVED,
-            totalPages: Math.floor(images.totalHits / 12),
-          }));
-        })
-        .catch(error => this.setState({ error, status: Status.REJECTED }));
     }
+
+    if (this.state.error) {
+      this.setState({ error: null });
+    }
+
+    //   setTimeout(() => {
+    fetchImages(nextName, page)
+      .then(images => {
+        this.setState(prevState => ({
+          images: page === 1 ? images.hits : [...prevState.images, ...images],
+          status: Status.RESOLVED,
+          totalPages: Math.ceil(images.totalHits / 12),
+        }));
+      })
+      .catch(error => this.setState({ error, status: Status.REJECTED }));
+    //   }, 2000);
   }
+
+  loadMoreBtnClick = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
+
   render() {
-    const { status, error, images } = this.state;
+    const { status, error, images, page, totalPages } = this.state;
     if (status === Status.IDLE) {
       return <div>Please, enter a search query</div>;
     }
@@ -61,11 +72,16 @@ export class ImageGallery extends Component {
 
     if (status === Status.RESOLVED) {
       return (
-        <ul>
-          {images.map(image => (
-            <ImageGalleryItem key={image.id} image={image} />
-          ))}
-        </ul>
+        <>
+          <ul>
+            {images.map(image => (
+              <ImageGalleryItem key={image.id} image={image} />
+            ))}
+          </ul>
+          {images.length >= 12 && page <= totalPages && (
+            <Button onClick={this.loadMoreBtnClick} />
+          )}
+        </>
       );
     }
   }

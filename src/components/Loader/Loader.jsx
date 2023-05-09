@@ -8,7 +8,7 @@ export const Loader = () => {
       ariaLabel="blocks-loading"
       wrapperStyle={{}}
       wrapperClass="blocks-wrapper"
-      colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+      colors={['#310ecdb7', '#4340ef', '#6a92f8', '#ecf412', '#f9f94b']}
     />
   );
 };
