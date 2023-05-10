@@ -27,23 +27,27 @@ export class ImageGallery extends Component {
     const { page } = this.state;
     const prevName = prevProps.image;
     const nextName = this.props.image;
-
     if (prevName !== nextName || prevState.page !== page) {
-      this.setState({
-        status: Status.PENDING,
-      });
+      try {
+        this.setState({
+          status: Status.PENDING,
+        });
 
-      const images = await fetchImages(nextName, page);
-      if (nextName.trim() === '' || !images.length) {
-        toast.error(`Sorry, but there are no pictures with ${nextName}`);
+        const images = await fetchImages(nextName, page);
+        if (nextName.trim() === '' || !images.length) {
+          toast.error(`Sorry, but there are no pictures with ${nextName}`);
+        }
+
+        const totalPages = Math.ceil(images.totalHits / 12);
+        this.setState(prevState => ({
+          images: [...prevState.images, ...images],
+          status: Status.RESOLVED,
+          totalPages: totalPages,
+        }));
+      } catch (error) {
+        this.setState({ status: Status.REJECTED });
+        toast.error('Something went wrong');
       }
-
-      const totalPages = Math.ceil(images.totalHits / 12);
-      this.setState(prevState => ({
-        images: [...prevState.images, ...images],
-        status: Status.RESOLVED,
-        totalPages: totalPages,
-      }));
     }
   }
 
@@ -59,6 +63,10 @@ export class ImageGallery extends Component {
 
     if (status === Status.PENDING) {
       return <Loader />;
+    }
+
+    if (status === Status.REJECTED) {
+      return <ImageErrorView />;
     }
 
     if (status === Status.RESOLVED) {
