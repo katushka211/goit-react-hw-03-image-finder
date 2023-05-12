@@ -5,7 +5,6 @@ import { Component } from 'react';
 import { fetchImages } from 'services/fetchImages';
 import { Button } from 'components/Searchbar/Button/Button';
 import { toast } from 'react-toastify';
-import { Modal } from 'components/Modal/Modal';
 
 const Status = {
   IDLE: 'idle',
@@ -22,8 +21,6 @@ export class ImageGallery extends Component {
     error: null,
     page: 1,
     totalPages: 0,
-    isShowModal: false,
-    modalData: { img: '', tags: '' },
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -59,8 +56,7 @@ export class ImageGallery extends Component {
   };
 
   render() {
-    const { status, images, totalPages, page, isShowModal, modalData } =
-      this.state;
+    const { status, images, totalPages, page } = this.state;
     if (status === Status.IDLE) {
       return <div>Please, enter a search query</div>;
     }
@@ -86,9 +82,6 @@ export class ImageGallery extends Component {
               <Button onClick={this.loadMoreBtnClick} />
             )}
           {images.length === 0 && <ImageErrorView />}
-          {isShowModal && (
-            <Modal modalData={modalData} onModalClose={this.handleModalClose} />
-          )}
         </>
       );
     }

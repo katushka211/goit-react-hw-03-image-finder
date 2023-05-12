@@ -1,7 +1,51 @@
-export const ImageGalleryItem = ({ image }) => {
-  return (
-    <li>
-      <img src={image.webformatURL} alt={image.tags} />
-    </li>
-  );
+import { Component } from 'react';
+import { Modal } from 'components/Modal/Modal';
+import PropTypes from 'prop-types';
+
+export class ImageGalleryItem extends Component {
+  state = {
+    selectedImg: null,
+    isShowModal: false,
+  };
+
+  toggleModal = () => {
+    this.setState(({ isShowModal }) => ({
+      isShowModal: !isShowModal,
+    }));
+  };
+
+  setSelectedImg = () => {
+    this.setState({ selectedImg: this.props.image.largeImageURL });
+  };
+
+  render() {
+    const { largeImageURL, tags } = this.props.image;
+    const { image } = this.props;
+    const { isShowModal } = this.state;
+
+    return (
+      <div>
+        <div onClick={() => this.toggleModal(largeImageURL)}>
+          <img
+            loading="lazy"
+            src={image.webformatURL}
+            alt={image.tags}
+            width="320"
+          />
+        </div>
+        {isShowModal && (
+          <Modal onModalClose={this.toggleModal}>
+            <img loading="lazy" src={largeImageURL} alt={tags} />
+          </Modal>
+        )}
+      </div>
+    );
+  }
+}
+
+ImageGalleryItem.propTypes = {
+  image: PropTypes.shape({
+    largeImageURL: PropTypes.string.isRequired,
+    tags: PropTypes.string.isRequired,
+  }).isRequired,
 };
