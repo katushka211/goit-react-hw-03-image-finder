@@ -1,7 +1,9 @@
+import { GlobalStyle } from './GlobalStyle';
 import { Component } from 'react';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ToastContainer } from 'react-toastify';
 import { ImageGallery } from './ImageGallery/ImageGallery';
+import { Layout } from './Layout/Layout';
 
 export class App extends Component {
   state = {
@@ -11,11 +13,12 @@ export class App extends Component {
   handleFormSubmit = imageName => this.setState({ imageName });
   render() {
     return (
-      <div style={{ maxWidth: 1170, margin: '0 auto', padding: 20 }}>
+      <Layout>
         <Searchbar onSubmit={this.handleFormSubmit} />
         <ImageGallery image={this.state.imageName} />
         <ToastContainer autoClose={2500} />
-      </div>
+        <GlobalStyle />
+      </Layout>
     );
   }
 }

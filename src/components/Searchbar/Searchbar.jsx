@@ -1,6 +1,10 @@
 import { Component } from 'react';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import { SearchButton } from './Searchbar.styled';
+import { SearchBtnLabel } from './Searchbar.styled';
+
+// import { SearchForm } from './Searchbar.styled';
 export class Searchbar extends Component {
   state = {
     imageName: '',
@@ -24,9 +28,9 @@ export class Searchbar extends Component {
     return (
       <header>
         <form onSubmit={this.handleSubmit}>
-          <button type="submit">
-            <span>Search</span>
-          </button>
+          <SearchButton type="submit">
+            <SearchBtnLabel>Search</SearchBtnLabel>
+          </SearchButton>
 
           <input
             type="text"
