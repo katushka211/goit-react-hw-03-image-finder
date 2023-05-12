@@ -1,10 +1,13 @@
 import { Component } from 'react';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
+import { SearchBar } from './Searchbar.styled';
 import { SearchButton } from './Searchbar.styled';
 import { SearchBtnLabel } from './Searchbar.styled';
+import { FiSearch } from 'react-icons/fi';
+import { SearchFormInput } from './Searchbar.styled';
 
-// import { SearchForm } from './Searchbar.styled';
+import { SearchForm } from './Searchbar.styled';
 export class Searchbar extends Component {
   state = {
     imageName: '',
@@ -26,13 +29,13 @@ export class Searchbar extends Component {
 
   render() {
     return (
-      <header>
-        <form onSubmit={this.handleSubmit}>
+      <SearchBar>
+        <SearchForm onSubmit={this.handleSubmit}>
           <SearchButton type="submit">
-            <SearchBtnLabel>Search</SearchBtnLabel>
+            <FiSearch size="20" />
+            <SearchBtnLabel />
           </SearchButton>
-
-          <input
+          <SearchFormInput
             type="text"
             autoComplete="off"
             autoFocus
@@ -40,8 +43,8 @@ export class Searchbar extends Component {
             value={this.state.imageName}
             onChange={this.handleNameChange}
           />
-        </form>
-      </header>
+        </SearchForm>
+      </SearchBar>
     );
   }
 }
