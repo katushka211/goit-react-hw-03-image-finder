@@ -5,6 +5,7 @@ import { Component } from 'react';
 import { fetchImages } from 'services/fetchImages';
 import { Button } from 'components/Searchbar/Button/Button';
 import { toast } from 'react-toastify';
+import { Gallery } from './ImageGallery.styled';
 
 const Status = {
   IDLE: 'idle',
@@ -72,11 +73,11 @@ export class ImageGallery extends Component {
     if (status === Status.RESOLVED) {
       return (
         <>
-          <ul>
+          <Gallery>
             {images.map(image => (
               <ImageGalleryItem key={image.id} image={image} />
             ))}
-          </ul>
+          </Gallery>
           {images.length >= 12 &&
             (page < totalPages || images.length % 12 === 0) && (
               <Button onClick={this.loadMoreBtnClick} />

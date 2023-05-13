@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import { Modal } from 'components/Modal/Modal';
 import PropTypes from 'prop-types';
+import { Image } from './ImageGalleryItem.styled';
+// import { GalleryItem } from './ImageGalleryItem.styled';
 
 export class ImageGalleryItem extends Component {
   state = {
@@ -26,7 +28,7 @@ export class ImageGalleryItem extends Component {
     return (
       <div>
         <div onClick={() => this.toggleModal(largeImageURL)}>
-          <img
+          <Image
             loading="lazy"
             src={image.webformatURL}
             alt={image.tags}
