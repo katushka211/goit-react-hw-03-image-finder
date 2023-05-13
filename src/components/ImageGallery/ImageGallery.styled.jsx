@@ -12,3 +12,8 @@ export const Gallery = styled.ul`
   margin-left: auto;
   margin-right: auto;
 `;
+
+export const Notif = styled.div`
+  margin: 0 auto;
+  font-size: 20px;
+`;

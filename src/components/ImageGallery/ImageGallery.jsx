@@ -6,6 +6,7 @@ import { fetchImages } from 'services/fetchImages';
 import { Button } from 'components/Searchbar/Button/Button';
 import { toast } from 'react-toastify';
 import { Gallery } from './ImageGallery.styled';
+import { Notif } from './ImageGallery.styled';
 
 const Status = {
   IDLE: 'idle',
@@ -59,7 +60,7 @@ export class ImageGallery extends Component {
   render() {
     const { status, images, totalPages, page } = this.state;
     if (status === Status.IDLE) {
-      return <div>Please, enter a search query</div>;
+      return <Notif>Please, enter a search query</Notif>;
     }
 
     if (status === Status.PENDING) {

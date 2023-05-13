@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
+import { LoadMoreBtn } from './Button.styled';
 export const Button = ({ onClick }) => {
   return (
-    <button onClick={onClick} type="button">
+    <LoadMoreBtn onClick={onClick} type="button">
       Load more
-    </button>
+    </LoadMoreBtn>
   );
 };
 
