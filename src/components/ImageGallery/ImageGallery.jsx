@@ -31,9 +31,17 @@ export class ImageGallery extends Component {
     const nextName = this.props.image;
     if (prevName !== nextName || prevState.page !== page) {
       try {
-        this.setState({
-          status: Status.PENDING,
-        });
+        if (prevState.page !== page) {
+          this.setState({
+            status: Status.PENDING,
+          });
+        } else {
+          this.setState({
+            status: Status.PENDING,
+            images: [],
+            page: 1,
+          });
+        }
 
         const images = await fetchImages(nextName, page);
         if (nextName.trim() === '' || !images.length) {
